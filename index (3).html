@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>虚拟与真实之间 — 一部东方艺术双男主小说</title>
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --gold-dark: #8B6914;
+    --ink: #1a1a2e;
+    --ink-light: #2d2d4a;
+    --paper: #FAF6EF;
+    --paper-dark: #F0E8D6;
+    --red-seal: #8B1A1A;
+    --text-main: #2C1810;
+    --text-muted: #6B5744;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--text-main);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    min-height: 100vh;
+  }
+
+  .cover {
+    background: linear-gradient(160deg, var(--ink) 0%, var(--ink-light) 60%, #3a1a2a 100%);
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(201,168,76,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .brush-strokes {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+
+  .cover-badge {
+    display: inline-block;
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 6px 20px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+    font-family: 'Georgia', serif;
+  }
+
+  .cover h1 {
+    font-size: 36px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+
+  .cover h1 span {
+    color: var(--gold);
+  }
+
+  .cover-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 40px;
+    font-style: italic;
+    letter-spacing: 1px;
+  }
+
+  .cover-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 28px 0;
+  }
+
+  .cover-divider .line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .cover-divider .diamond {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .cover-seal {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid rgba(201,168,76,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    background: rgba(201,168,76,0.05);
+  }
+
+  .cover-seal svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .genre-tags {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .genre-tag {
+    font-size: 11px;
+    padding: 4px 12px;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: rgba(201,168,76,0.7);
+    letter-spacing: 1px;
+  }
+
+  .toc {
+    background: var(--paper-dark);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding: 0;
+  }
+
+  .toc-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  .toc-title {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .toc-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toc-item:last-child { border-bottom: none; }
+
+  .toc-item:hover { padding-left: 6px; }
+  .toc-item:hover .toc-chapter-name { color: var(--gold-dark); }
+
+  .toc-num {
+    font-size: 11px;
+    color: var(--gold);
+    min-width: 28px;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+  }
+
+  .toc-chapter-name {
+    font-size: 14px;
+    color: var(--text-main);
+    transition: color 0.2s;
+  }
+
+  .toc-tag {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--text-muted);
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 2px 8px;
+    background: rgba(201,168,76,0.06);
+    white-space: nowrap;
+  }
+
+  .content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .chapter {
+    padding-top: 60px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    padding-bottom: 60px;
+  }
+
+  .chapter:last-child { border-bottom: none; }
+
+  .chapter-header {
+    margin-bottom: 40px;
+  }
+
+  .chapter-eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .chapter-number {
+    font-size: 48px;
+    font-weight: 400;
+    color: rgba(201,168,76,0.15);
+    line-height: 1;
+    margin-bottom: 4px;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+  }
+
+  .chapter-title {
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-main);
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+
+  .chapter-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .chapter-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 28px 0 36px;
+  }
+
+  .chapter-divider .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-light), transparent);
+  }
+
+  .chapter-divider .ornament {
+    color: var(--gold);
+    font-size: 14px;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    text-align: justify;
+  }
+
+  p:first-of-type::first-letter {
+    font-size: 52px;
+    font-family: 'Georgia', serif;
+    float: left;
+    line-height: 0.8;
+    margin: 8px 10px 0 0;
+    color: var(--gold-dark);
+    font-weight: 400;
+  }
+
+  .dialogue {
+    font-style: italic;
+    color: #3a2515;
+    border-left: 2px solid var(--gold);
+    padding: 14px 20px;
+    margin: 24px 0;
+    background: rgba(201,168,76,0.04);
+    border-radius: 0 6px 6px 0;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .dialogue .speaker {
+    font-style: normal;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+    font-family: sans-serif;
+  }
+
+  .knowledge-box {
+    background: var(--ink);
+    color: rgba(255,255,255,0.88);
+    padding: 24px 28px;
+    margin: 32px 0;
+    position: relative;
+    border-radius: 4px;
+  }
+
+  .knowledge-box::before {
+    content: '知识点';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 3px 12px;
+    font-family: sans-serif;
+    font-weight: 600;
+  }
+
+  .knowledge-box .kb-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-family: sans-serif;
+  }
+
+  .knowledge-box p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 12px;
+    text-align: left;
+    font-family: sans-serif;
+  }
+
+  .knowledge-box p:last-child { margin-bottom: 0; }
+
+  .knowledge-box p::first-letter {
+    font-size: inherit;
+    float: none;
+    margin: 0;
+    color: inherit;
+    font-weight: inherit;
+  }
+
+  .knowledge-box .malay-term {
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  .scene-break {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 40px 0;
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: rgba(201,168,76,0.4);
+  }
+
+  .thought {
+    background: rgba(201,168,76,0.04);
+    border: 1px dashed rgba(201,168,76,0.25);
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    border-radius: 4px;
+  }
+
+  .thought::before {
+    content: '—— 内心独白';
+    display: block;
+    font-style: normal;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(201,168,76,0.5);
+    margin-bottom: 8px;
+    font-family: sans-serif;
+  }
+
+  .emphasis {
+    color: var(--gold-dark);
+    font-style: italic;
+  }
+
+  .char-card {
+    background: var(--paper-dark);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 32px 0;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .char-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    border: 2px solid rgba(201,168,76,0.3);
+  }
+
+  .char-avatar.shou { background: rgba(201,168,76,0.1); }
+  .char-avatar.gong { background: rgba(26,26,46,0.08); }
+
+  .char-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 4px;
+  }
+
+  .char-role {
+    font-size: 11px;
+    color: var(--gold-dark);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: sans-serif;
+  }
+
+  .char-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-family: sans-serif;
+  }
+
+  .epilogue-box {
+    background: linear-gradient(135deg, var(--ink) 0%, var(--ink-light) 100%);
+    padding: 40px 36px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 48px;
+  }
+
+  .epilogue-box p {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    text-align: center;
+    font-family: sans-serif;
+    line-height: 1.8;
+  }
+
+  .epilogue-box p::first-letter {
+    font-size: inherit;
+    float: none;
+    margin: 0;
+    color: inherit;
+    font-weight: inherit;
+  }
+
+  .epilogue-box .final-line {
+    color: var(--gold);
+    font-size: 16px;
+    font-style: italic;
+    margin-top: 20px;
+    font-family: 'Georgia', serif;
+  }
+
+  @media (max-width: 500px) {
+    .cover h1 { font-size: 26px; }
+    .chapter-number { font-size: 36px; }
+    p:first-of-type::first-letter { font-size: 40px; }
+    .char-card { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <svg class="brush-strokes" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50,100 Q200,80 350,120" stroke="white" stroke-width="40" fill="none" opacity="0.3"/>
+    <path d="M30,300 Q180,250 370,320" stroke="white" stroke-width="25" fill="none" opacity="0.2"/>
+    <path d="M80,500 Q220,460 380,510" stroke="white" stroke-width="15" fill="none" opacity="0.15"/>
+  </svg>
+
+  <div class="cover-badge">双男主 · 学术向 · 东方艺术</div>
+
+  <div class="cover-seal">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="22" stroke="#C9A84C" stroke-width="1.5"/>
+      <path d="M24 8 L24 40 M8 24 L40 24" stroke="#C9A84C" stroke-width="1" opacity="0.4"/>
+      <circle cx="24" cy="24" r="8" stroke="#C9A84C" stroke-width="1.5" fill="rgba(201,168,76,0.1)"/>
+      <text x="24" y="28" text-anchor="middle" fill="#C9A84C" font-size="10" font-family="serif">藝</text>
+    </svg>
+  </div>
+
+  <h1>虚拟与真实之间<br><span>当代码遇见丹青</span></h1>
+  <p class="cover-subtitle">Antara Dunia Maya dan Nyata · Between Code and Brushstroke</p>
+
+  <div class="cover-divider">
+    <div class="line"></div>
+    <div class="diamond"></div>
+    <div class="line"></div>
+  </div>
+
+  <p style="color:rgba(255,255,255,0.45); font-size:13px; font-style:italic; font-family:Georgia,serif;">
+    "有些东西，屏幕永远给不了你——<br>就像有些人，只有真正靠近，才知道珍贵。"
+  </p>
+
+  <div class="genre-tags">
+    <span class="genre-tag">IR 4.0 · Galeri Maya</span>
+    <span class="genre-tag">Seni Oriental</span>
+    <span class="genre-tag">学术 × 浪漫</span>
+    <span class="genre-tag">双男主 HE</span>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="toc-inner">
+    <p class="toc-title">目录 · Kandungan</p>
+    <ul class="toc-list">
+      <li class="toc-item">
+        <span class="toc-num">序</span>
+        <span class="toc-chapter-name">人物介绍</span>
+        <span class="toc-tag">角色</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">一</span>
+        <span class="toc-chapter-name">像素里的墨迹 — 虚拟邂逅</span>
+        <span class="toc-tag">Soalan 1 · Galeri Maya</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">二</span>
+        <span class="toc-chapter-name">失真的神圣 — 美与真实之辩</span>
+        <span class="toc-tag">Soalan 2 · Estetika & Keaslian</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">三</span>
+        <span class="toc-chapter-name">向所有人开放的禁园 — 民主还是贬值？</span>
+        <span class="toc-tag">Soalan 3 · Pendemokrasian</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">尾</span>
+        <span class="toc-chapter-name">展厅尽头，你就在那里</span>
+        <span class="toc-tag">结局</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- 人物介绍 -->
+  <div class="chapter" id="ch0">
+    <div class="chapter-header">
+      <p class="chapter-eyebrow">序 · Prakata</p>
+      <h2 class="chapter-title">人物介绍</h2>
+      <p class="chapter-subtitle">Pengenalan Watak</p>
+    </div>
+
+    <div class="char-card">
+      <div class="char-avatar shou">🖌️</div>
+      <div>
+        <p class="char-name">林哲 · Lin Zhe</p>
+        <p class="char-role">受 · Pengkaji Seni Oriental</p>
+        <p class="char-desc">29岁，大学讲师兼独立研究员，专研东方传统艺术的数字化保存课题。性格内敛、细腻，沉迷于宋代山水画和敦煌壁画。总是戴着一副细框眼镜，手边永远放着一叠笔记。他相信，真正的艺术需要用身体去感受，而不只是用眼睛去看。</p>
+      </div>
+    </div>
+
+    <div class="char-card">
+      <div class="char-avatar gong">💻</div>
+      <div>
+        <p class="char-name">郝岩 · Hao Yan</p>
+        <p class="char-role">攻 · Arkitek Digital & Perancang Teknologi</p>
+        <p class="char-desc">32岁，科技公司合伙人，主导开发虚拟博物馆平台"东方云廊"。外表冷峻，逻辑思维极强，却在接触林哲的研究后，开始对那些他从未真正凝视过的古老笔触产生了某种说不清楚的感情。他相信数据能保存一切——直到他遇见了林哲。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第一章 -->
+  <div class="chapter" id="ch1">
+    <div class="chapter-header">
+      <p class="chapter-eyebrow">第一章 · Bab Pertama</p>
+      <div class="chapter-number">一</div>
+      <h2 class="chapter-title">像素里的墨迹</h2>
+      <p class="chapter-subtitle">Tinta di Dalam Piksel — Pertemuan di Galeri Maya</p>
+    </div>
+    <div class="chapter-divider">
+      <div class="line"></div>
+      <span class="ornament">✦</span>
+    </div>
+
+    <p>展厅是黑暗的，但黑暗之中有光。</p>
+
+    <p>林哲戴上VR头显的那一刻，他的世界瞬间被替换。他站在一个无边无际的数字空间里，四周漂浮着投影——那是敦煌莫高窟第285窟的壁画，被3D扫描还原后呈现在虚空之中，每一道颜料的裂纹都被放大了十倍，清晰得触目惊心。</p>
+
+    <p>他伸手，想去触摸那一片飞天的裙摆。手指穿过了光。</p>
+
+    <div class="thought">穿过了……当然穿过了。这是像素，不是颜料。这是坐标，不是丝绸。可为什么，我还是屏住了呼吸？</div>
+
+    <p>"第一次使用东方云廊系统？"</p>
+
+    <p>耳机里传来一个声音。不是系统语音——太低沉了，有一点冷静，又有一点微妙的、带着测试意味的弧度。</p>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "……你是谁？这个平台不是公开测试版吗？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "我是开发者。郝岩。你在我系统里徘徊了四十分钟，还没看完第一个展厅，我有点好奇你在干什么。"
+    </div>
+
+    <p>林哲摘下头显，坐回桌前。他在一家咖啡馆的角落里，桌上铺满了他的田野调查笔记——全是他手写的，密密麻麻，偶尔夹着几张从期刊上剪下来的图片。</p>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "我在研究虚拟画廊作为东方艺术保存媒介的有效性。你的平台是目前做得最完整的一个，所以我来测试。"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "有什么问题？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "图像很好。三维重建很精准。但是——"他停顿了一下，"——我觉得，还是少了什么。"
+    </div>
+
+    <p>另一端沉默了片刻。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "少了什么？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "少了那种……站在壁画前，感觉到地底的凉意从脚底板升上来，闻到石窟里数百年的尘土气息——那种身体里的震动，不是头显能给的。"
+    </div>
+
+    <p>又是一段沉默。比刚才更长。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "……你去过敦煌？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "去过三次。每次都不够。"
+    </div>
+
+    <div class="knowledge-box">
+      <div class="kb-label">Soalan 1 · Keberkesanan Teknologi Digital dalam Seni Oriental</div>
+      <p>
+        <span class="malay-term">Lawatan Galeri Maya (Virtual Gallery)</span> dalam konteks Revolusi Industri 4.0 (IR 4.0) merupakan medium baharu yang menggunakan teknologi seperti <span class="malay-term">Realiti Maya (VR)</span>, <span class="malay-term">Realiti Terimbuh (AR)</span>, dan pengimbasan 3D untuk mereplikasi dan memperluaskan akses kepada karya seni Oriental.
+      </p>
+      <p>
+        <strong style="color:var(--gold-light)">Keberkesanan teknologi ini:</strong> Platform digital berjaya memelihara karya seni yang rapuh dan terdedah kepada kerosakan fizik. Lukisan dinding Dunhuang (敦煌壁画), misalnya, kini boleh diakses oleh seluruh dunia tanpa menambah risiko kerosakan kepada bahan asli. Teknologi ini juga membolehkan pembesaran imej, terjemahan dan penjelasan interaktif yang memperkayakan pemahaman.
+      </p>
+      <p>
+        <strong style="color:var(--gold-light)">Batasannya:</strong> Walau bagaimanapun, pengalaman maya tidak dapat menggantikan pengalaman <span class="malay-term">penghayatan multideria</span> secara fizikal — rasa, bau, suhu, dan <span class="malay-term">kehadiran jasmaniah</span> di hadapan karya asal adalah dimensi yang tidak dapat didigitalkan sepenuhnya. Seperti yang dikatakan ahli estetika, "seni bukan sahaja dilihat, tetapi dirasai dengan seluruh tubuh badan."
+      </p>
+    </div>
+
+    <p>在接下来的两个小时里，林哲和这个他素未谋面的声音进行了一场奇异的对话。他用研究者的语言解构那些画作，而郝岩用程序员的语言回应——两种语言之间，有一条奇妙的裂缝，裂缝里有某种叫做"理解"的东西，正在试图生长。</p>
+
+    <div class="scene-break">· · ✦ · ·</div>
+
+    <p>第二天，郝岩发来一条消息。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "你说的'凉意'和'尘土味'——我一整晚都在想。我查了一些资料，关于多感官体验和艺术感知。我觉得你说得有一定道理，但我也不完全同意。我们可以见面谈吗？"
+    </div>
+
+    <div class="thought">林哲看着这条消息，推了推眼镜。<br>一个科技公司的创始人，为了一个艺术研究者随口一句抱怨，查了一晚上资料？<br>……这个人，有点奇怪。</div>
+
+    <p>但他还是回复了。</p>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "好。"
+    </div>
+  </div>
+
+  <!-- 第二章 -->
+  <div class="chapter" id="ch2">
+    <div class="chapter-header">
+      <p class="chapter-eyebrow">第二章 · Bab Kedua</p>
+      <div class="chapter-number">二</div>
+      <h2 class="chapter-title">失真的神圣</h2>
+      <p class="chapter-subtitle">Kesucian yang Hilang Bentuk — Estetika, Makna, dan Keaslian</p>
+    </div>
+    <div class="chapter-divider">
+      <div class="line"></div>
+      <span class="ornament">✦</span>
+    </div>
+
+    <p>他们约在一家茶室见面。</p>
+
+    <p>郝岩比林哲想象中高一些，也安静一些。他坐在那里，正在看一本林哲熟得不能再熟的书——《东方美学导论》——但他拿书的方式很奇怪，像是在检阅一份技术文档，而不是在阅读一本关于美的书。</p>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "……你在看那本书？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "昨晚买的。"他抬起头，"你在研究什么方向的东方艺术？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "主要是传统和具有仪式性功能的作品。比如唐卡、祭祀陶器、寺庙壁画。这类作品的特殊性在于，它们不只是'审美对象'，它们是有宗教意义的——马来语里有个词，<span class="emphasis">sakral</span>，圣洁的、神圣的。数字化之后，我不确定这种sakral属性能否保留。"
+    </div>
+
+    <p>郝岩放下书。这是整场对话里他第一次把书放下。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "你的意思是，当一幅唐卡变成一个JPG文件，它的神圣性就消失了？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "不是消失，是……转移了。或者说，被悬置了。你看到的是它的外壳，但它作为一件圣物的内核，是依附于那个具体的实体的。"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "那和一张精确到每一根纤维的超高清扫描图相比——"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "还是不一样。"
+    </div>
+
+    <p>郝岩沉默了一会儿。茶室里有古琴在播放，若有若无。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "我能问一个可能有点冒犯的问题吗？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "问。"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "你有没有可能只是在……用情感来抗拒一个逻辑上正确的结论？"
+    </div>
+
+    <p>林哲愣了一下，然后笑了。不是愤怒的笑，是一种被人击中某个没有预料到的地方之后，才会有的那种笑。</p>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "有可能。但我的研究不是要证明数字化是错的。我是要找到——数字化在哪里是对的，在哪里是有边界的。你觉得你的平台能完整替代实物吗？"
+    </div>
+
+    <p>这一次，轮到郝岩笑了。同样奇怪的角度。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "不能。但它能做到实物做不到的事情。"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "比如？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "比如让一个在婆罗洲长大的孩子，第一次看见故宫的玉器。"
+    </div>
+
+    <p>林哲沉默了。</p>
+
+    <div class="knowledge-box">
+      <div class="kb-label">Soalan 2 · Estetika, Makna, dan Keaslian dalam Era Digital</div>
+      <p>
+        Karya seni Oriental yang bersifat <span class="malay-term">tradisional dan sakral</span> — seperti Thangka Tibet, tembikar ritual, atau lukisan dinding kuil — membawa dua lapisan makna: <span class="malay-term">estetika (nilai keindahan)</span> dan <span class="malay-term">makna sakral (nilai keagamaan/ritual)</span>.
+      </p>
+      <p>
+        <strong style="color:var(--gold-light)">Kesan pendigitalan terhadap estetika:</strong> Platform digital mampu memelihara dan memperluaskan <span class="malay-term">nilai estetika</span> dengan sangat baik — warna, komposisi, dan teknik boleh dikaji secara mendalam dengan zoom dan analisis digital.
+      </p>
+      <p>
+        <strong style="color:var(--gold-light)">Kesan terhadap keaslian (authenticity):</strong> Ahli falsafah seni seperti Walter Benjamin menyebut konsep <span class="malay-term">"aura"</span> — kualiti unik yang dimiliki oleh karya seni asal berdasarkan kehadiran fizikalnya di satu masa dan tempat tertentu. Pendigitalan boleh dianggap mengurangkan "aura" ini, memisahkan karya daripada konteks asal dan nilai <span class="malay-term">sakralnya</span>. Namun ia tidak menghapuskan — sebaliknya ia membuka peluang kepada <span class="malay-term">penafsiran baharu</span> dan pemahaman yang lebih luas.
+      </p>
+    </div>
+
+    <div class="scene-break">· · ✦ · ·</div>
+
+    <p>两个小时后，他们还在茶室里。古琴换成了琵琶，茶已经续了三次。</p>
+
+    <p>林哲不记得什么时候开始，他们从"学术讨论"滑入了一种他说不清楚的状态——他在跟郝岩说他第一次在京都看到千手观音像时的感受，郝岩不打断他，只是听着，偶尔问一个问题，问题永远是他没有被问过的那种角度。</p>
+
+    <div class="thought">他懂得听人说话。<br>在这个时代，这已经是一种很稀有的能力了。</div>
+
+    <p>离开前，郝岩在他的笔记本第一页空白处写下了一个网址，然后用平静的口吻说：</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "这是我们平台下一个版本的内测入口。我想听你的意见。"
+    </div>
+
+    <p>他没有说"欢迎合作"，没有递名片，没有任何商业礼仪，只是在林哲的笔记本上留下一道墨迹，然后离开了。</p>
+
+    <div class="thought">林哲低头看着那个网址。字迹很好看，不像工程师写的字。<br>……奇怪的人。</div>
+  </div>
+
+  <!-- 第三章 -->
+  <div class="chapter" id="ch3">
+    <div class="chapter-header">
+      <p class="chapter-eyebrow">第三章 · Bab Ketiga</p>
+      <div class="chapter-number">三</div>
+      <h2 class="chapter-title">向所有人开放的禁园</h2>
+      <p class="chapter-subtitle">Taman Terlarang yang Kini Terbuka — Pendemokrasian Seni</p>
+    </div>
+    <div class="chapter-divider">
+      <div class="line"></div>
+      <span class="ornament">✦</span>
+    </div>
+
+    <p>内测版本让林哲沉默了整整一天。</p>
+
+    <p>郝岩加了新的东西——一整个"失落文物"展区，汇集了那些分散在全球各大博物馆、甚至私人藏家手中的东方艺术品。大英博物馆的唐代金器，卢浮宫的汉代丝织品，纽约大都会的商代青铜鼎——它们被收归一处，第一次在同一个空间里"相遇"。</p>
+
+    <div class="thought">林哲想起他有一个朋友，来自砂拉越的原住民，一辈子没有出过东南亚，却对中国古代艺术有着极深的热情。他自学汉语，下载了能找到的所有图册，就为了看那些他永远无法抵达的东西。<br><br>如果有了这个平台，他就能在自己家里看到那只商代青铜鼎的每一个角度。<br><br>这算不算一件好事？</div>
+
+    <p>他给郝岩发了一条消息。</p>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "你的失落文物展区……我承认，这比我想象中更让我动容。但我有一个问题。当这些文物变得触手可及之后，它们还有没有那种'稀缺的光晕'？还是说，它们就此变成了——只是另一种内容？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "你的问题让我想起一个比喻。一首乐曲，在黑胶唱片时代，你需要拥有唱机才能听到它。流媒体时代，人人都能点开。它就因此变得不好听了吗？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "艺术不是流行歌曲。"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "但你刚才说'动容'。那种动容，是因为艺术本身，还是因为它的稀缺性？"
+    </div>
+
+    <p>林哲放下手机，在窗边站了很久。</p>
+
+    <p>外面是普通的城市夜晚，霓虹、人声、外卖摩托车的声音。他想起一次在台北故宫排了三个小时长队，只为了看那件传说中的"翠玉白菜"。看到实物的那一刻，人潮涌动，他只有十五秒钟的时间，然后就被人流推走了。</p>
+
+    <div class="thought">那十五秒，却是我做这行十年来最清晰的一刻。<br><br>但如果没有那三个小时的等待，如果我不是在一个人头攒动的展厅里挤到最前面，那十五秒还会一样吗？<br><br>郝岩是对的，还是我是对的？<br><br>……也许我们都对。也许这才是问题所在。</div>
+
+    <div class="knowledge-box">
+      <div class="kb-label">Soalan 3 · Pendemokrasian Seni dan Nilai Eksklusif</div>
+      <p>
+        Konsep <span class="malay-term">"pendemokrasian seni"</span> merujuk kepada proses menjadikan seni boleh diakses oleh semua lapisan masyarakat, tanpa mengira status sosial, lokasi geografi, atau keupayaan kewangan. Teknologi IR 4.0 melalui platform digital telah merealisasikan ini.
+      </p>
+      <p>
+        <strong style="color:var(--gold-light)">Kesan positif:</strong> Karya-karya yang dahulunya hanya boleh dilihat di <span class="malay-term">muzium-muzium terkemuka dunia</span> (British Museum, Louvre, Metropolitan) kini boleh diakses oleh sesiapa sahaja, termasuk masyarakat di pedalaman Sarawak. Ini membuka peluang pendidikan dan apresiasi seni yang setara dan inklusif.
+      </p>
+      <p>
+        <strong style="color:var(--gold-light)">Kesan negatif (nilai eksklusif):</strong> Apabila sesebuah karya menjadi terlalu mudah diakses, ia mungkin kehilangan <span class="malay-term">nilai eksklusif</span> dan kesusahan perjalanan yang turut membentuk pengalaman penghayatan. Seperti yang diperkatakan oleh pengkritik seni, pengalaman "berjuang" untuk melihat karya asal — beratur, belayar, menabung — adalah sebahagian daripada makna itu sendiri. Namun persoalan ini harus ditimbang dengan <span class="malay-term">keadilan akses</span>: adakah hak untuk menghayati seni hanya milik mereka yang berkemampuan?
+      </p>
+    </div>
+
+    <div class="scene-break">· · ✦ · ·</div>
+
+    <p>三周后，郝岩邀请他来公司看平台的开发室。</p>
+
+    <p>那是一个宽敞的、有很多屏幕的空间，几十名工程师坐在里面，写代码，看数据。林哲站在入口，有一种奇异的不真实感——这里没有一件实物艺术品，但无数艺术品的灵魂被分解成数据，在这些机器里流动。</p>
+
+    <p>郝岩走过来，站在他旁边。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "你在想什么？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "我在想……也许你们做的，和我做的，不是对立的事情。你在建造一座新的博物馆，我在研究旧的博物馆如何影响人。我们只是——站在同一条河的两岸。"
+    </div>
+
+    <p>郝岩沉默了片刻，然后说了一句话，让林哲愣在原地。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "那你愿不愿意，过来我这岸看看？"
+    </div>
+
+    <div class="thought">林哲后来想，那大概是他们之间，第一句意思不只是字面意思的话。</div>
+  </div>
+
+  <!-- 尾章 -->
+  <div class="chapter" id="ch4">
+    <div class="chapter-header">
+      <p class="chapter-eyebrow">尾声 · Epilog</p>
+      <div class="chapter-number">尾</div>
+      <h2 class="chapter-title">展厅尽头，你就在那里</h2>
+      <p class="chapter-subtitle">Di Hujung Galeri, Kau Ada di Sana</p>
+    </div>
+    <div class="chapter-divider">
+      <div class="line"></div>
+      <span class="ornament">✦</span>
+    </div>
+
+    <p>半年后，"东方云廊"正式上线。</p>
+
+    <p>林哲的研究报告也在同一个月发表，题目是《数字化与东方艺术的双重身份：在保存与转化之间》。报告的结论部分，他引用了一句郝岩在某次深夜讨论中随口说出的话——郝岩当时可能自己都没意识到它有多重要：</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩（报告引用）</span>
+      "技术能做到的，是让人先看见。让人先看见，然后才有可能，让人想亲自去。"
+    </div>
+
+    <p>上线发布会那天，林哲坐在观众席里，看郝岩站在台上演示系统。屏幕上，一幅宋代范宽的《溪山行旅图》缓缓展开，被AI分层解析，每一笔皴法、每一块墨色的层次都被标注出来。</p>
+
+    <p>台下有人发出低低的惊叹声。</p>
+
+    <p>林哲没有惊叹，他只是轻轻推了推眼镜，在笔记本上写下一行字：</p>
+
+    <div class="thought" style="font-style:normal; text-align:center; font-size:15px; color: var(--gold-dark); padding: 20px;">
+      "它让人想去。这已经足够了。"
+    </div>
+
+    <p>发布会结束后，郝岩在人群中找到他，用那种他熟悉的、带着一点冷静和一点不动声色的弧度问：</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "满意吗？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "报告里我给了你们平台四点二分（满分五分）。"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "扣了哪里？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "扣了凉意和尘土味。"
+    </div>
+
+    <p>郝岩沉默了一秒，然后他做了一件林哲完全没有预料到的事——他笑了。不是那种带着测试意味的笑，是真正的、毫无戒备的笑，让他整个人突然就软了一个角。</p>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "……那剩下的零点八分，我要怎么拿回来？"
+    </div>
+
+    <div class="dialogue">
+      <span class="speaker">林哲</span>
+      "你得带我去一次敦煌。"
+    </div>
+
+    <p>郝岩看着他，又是那段熟悉的沉默。但这次，林哲不再觉得那个沉默是在思考逻辑，而是——</p>
+
+    <div class="thought">是在把某个答案放进去。</div>
+
+    <div class="dialogue">
+      <span class="speaker">郝岩</span>
+      "好。"
+    </div>
+
+    <div class="epilogue-box">
+      <p>故事的最后，他们去了敦煌。</p>
+      <p style="margin-top:12px;">林哲站在莫高窟第285窟里，感受到地底的凉意从脚底升上来。他没有戴头显，没有3D扫描，只有他和那面一千六百年前的壁画，还有身后某个不知道什么时候悄悄站过来的人。</p>
+      <p style="margin-top:12px;">郝岩没有说话。他只是站在林哲身边，第一次，沉默地凝视着那些他一直用数据去理解的东西。</p>
+      <p class="final-line" style="margin-top:24px;">
+        "有些东西，屏幕永远给不了你——<br>
+        就像有些人，只有真正靠近，才知道珍贵。"
+      </p>
+      <p style="margin-top:20px; font-size:12px; color:rgba(255,255,255,0.3); font-family:sans-serif;">
+        全文完 · Tamat · The End<br><br>
+        知识点来源：IR 4.0 · Galeri Maya · Seni Oriental · Pendemokrasian Seni · Estetika & Keaslian
+      </p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
